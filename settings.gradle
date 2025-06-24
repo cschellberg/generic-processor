@@ -1,0 +1,7 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal() // This line is crucial for finding plugins from the Portal
+        mavenCentral() // Often good to have for other things, but not strictly for plugins block
+    }
+}
+rootProject.name = 'JavaTest'

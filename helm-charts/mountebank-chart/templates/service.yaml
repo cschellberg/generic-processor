@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # Directly define fullname, assuming release name is "mountebank" and chart name is "mountebank"
+  name: {{ .Release.Name }}-mountebank
+  labels:
+    helm.sh/chart: mountebank-0.1.0 # Directly specify chart name and version
+    app.kubernetes.io/name: mountebank
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "2.x" # From appVersion in Chart.yaml
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.adminPort }}
+      protocol: TCP
+      name: mountebankadmin
+    - port: 9999
+      targetPort: 9999
+      name: backend
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: mountebank
+    app.kubernetes.io/instance: {{ .Release.Name }}

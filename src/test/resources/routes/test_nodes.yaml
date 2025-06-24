@@ -1,0 +1,35 @@
+nodes:
+  - input:
+      children:
+        - node1
+        - node2
+      dependsOn:
+      className: com.example.membersapp.nodes.TreeNode
+  - node1:
+      children:
+        - node3
+        - node5
+      dependsOn:
+        - input
+      className: com.example.membersapp.nodes.TreeNode
+  - node2:
+      children:
+        - node4
+      dependsOn:
+        - input
+      className: com.example.membersapp.nodes.TreeNode
+  - node3:
+      children:
+      dependsOn:
+        - node1
+      className: com.example.membersapp.nodes.TreeNode
+  - node4:
+      children:
+      dependsOn:
+        - node2
+      className: com.example.membersapp.nodes.TreeNode
+  - node5:
+      children:
+      dependsOn:
+        - node1
+      className: com.example.membersapp.nodes.TreeNode

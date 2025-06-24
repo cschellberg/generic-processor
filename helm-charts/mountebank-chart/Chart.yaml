@@ -1,0 +1,6 @@
+# Chart.yaml
+apiVersion: v2
+name: mountebank
+description: A Helm chart for deploying Mountebank on Kubernetes.
+version: 0.1.0
+appVersion: "2.x" # Specify the Mountebank application version you intend to deploy

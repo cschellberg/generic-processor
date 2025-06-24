@@ -1,0 +1,34 @@
+replicaCount: 1
+
+image:
+  repository: bbyars/mountebank
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest" # You can specify a different version here, e.g., "2.9.0"
+
+service:
+  type: ClusterIP
+  port: 2525 # Default Mountebank HTTP port
+  adminPort: 2525 # The port Mountebank's API listens on
+  impostersPort: 2526 # Example for first imposter, can be dynamically managed
+
+# Resources for Mountebank pods
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+autoscaling:
+  enabled: false
+
+serviceAccount:
+  name: donsmountebank
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

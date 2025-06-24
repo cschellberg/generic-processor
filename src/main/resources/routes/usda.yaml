@@ -1,0 +1,32 @@
+nodes:
+  - input:
+      children:
+        - authorize
+        - purchase
+      dependsOn:
+      className: com.example.membersapp.nodes.TreeNode
+  - authorize:
+      children:
+        - finalize
+      dependsOn:
+        - input
+      className: com.example.membersapp.nodes.TreeNode
+  - purchase:
+      children:
+        - finalize
+      dependsOn:
+        - input
+      className: com.example.membersapp.nodes.TreeNode
+  - finalize:
+      children:
+        - output
+      dependsOn:
+        - authorize
+        - purchase
+      className: com.example.membersapp.nodes.TreeNode
+  - output:
+      children:
+      dependsOn:
+        - finalize
+      className: com.example.membersapp.nodes.TreeNode
+
