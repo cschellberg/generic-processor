@@ -1,25 +1,24 @@
 package com.example.membersapp.engine;
 
 import com.example.membersapp.model.Metric;
+import com.example.membersapp.model.Transaction;
+import com.example.membersapp.model.TransactionResponse;
+import com.example.membersapp.nodes.TreeNode;
+import com.example.membersapp.nodes.TreeNodeInterface;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.example.membersapp.model.Transaction;
-import com.example.membersapp.model.TransactionResponse;
-import com.example.membersapp.nodes.TreeNode;
-import com.example.membersapp.nodes.TreeNodeInterface;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 public class TransactionEngine {
-  private static AtomicInteger idCounter=new AtomicInteger(0);
+  private static AtomicInteger idCounter = new AtomicInteger(0);
   private final TreeNodeInterface root;
   private static final Logger LOG = LoggerFactory.getLogger(TransactionEngine.class);
   public static final String INPUT = "input";
@@ -29,8 +28,8 @@ public class TransactionEngine {
     root = new TreeNode(INPUT);
   }
 
-  public void add(String parentName, String childName, List<String> dependsOn, Class<?> clazz) {
-    var treeNode = (TreeNodeInterface) applicationContext.getBean(clazz);
+  public void add(String parentName, String childName, List<String> dependsOn, String beanName) {
+    var treeNode = (TreeNodeInterface) applicationContext.getBean(beanName);
     treeNode.setName(childName);
     treeNode.setDependsOn(dependsOn);
     var node = findNode(parentName, root);
@@ -55,7 +54,8 @@ public class TransactionEngine {
     return null;
   }
 
-  public Map<String, Object>  execute(Transaction transaction) throws ExecutionException, InterruptedException, TimeoutException {
+  public Map<String, Object> execute(Transaction transaction)
+      throws ExecutionException, InterruptedException, TimeoutException {
     var mapper = new ObjectMapper();
     transaction.setTransactionDate(new Date());
     transaction.setTransactionId(getTransactionId());
@@ -63,10 +63,11 @@ public class TransactionEngine {
     var workingMap = new HashMap<String, Object>();
     var metricList = new ArrayList<Metric>();
     workingMap.put("request", jsonMap);
-    return execute(workingMap,metricList);
+    workingMap.put("response", new HashMap<String, Object>());
+    return execute(workingMap, metricList);
   }
 
-  public Map<String, Object>  execute(Map<String, Object> workingMap, List<Metric> metricList)
+  public Map<String, Object> execute(Map<String, Object> workingMap, List<Metric> metricList)
       throws ExecutionException, InterruptedException, TimeoutException {
     var completableFutureMap = new HashMap<String, CompletableFuture<TransactionResponse>>();
     this.execute(completableFutureMap, List.of(root), workingMap, metricList);
@@ -110,9 +111,9 @@ public class TransactionEngine {
   }
 
   private String getTransactionId() {
-    var idNum= idCounter.getAndIncrement();
-    if ( idNum > 999999){
-      idNum=0;
+    var idNum = idCounter.getAndIncrement();
+    if (idNum > 999999) {
+      idNum = 0;
       idCounter.set(0);
     }
     return String.format("%06d", idNum);

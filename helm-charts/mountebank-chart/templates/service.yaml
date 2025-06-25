@@ -20,6 +20,10 @@ spec:
       targetPort: 9999
       name: backend
       protocol: TCP
+    - port: 9998
+      targetPort: 9998
+      name: authorizerbackend
+      protocol: TCP
   selector:
     app.kubernetes.io/name: mountebank
     app.kubernetes.io/instance: {{ .Release.Name }}

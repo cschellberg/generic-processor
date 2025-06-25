@@ -6,6 +6,7 @@ const API_BASE_URL = '/api/transaction'; // Your Spring Boot API endpoint
 
 function TransactionForm() {
     const [transaction, setTransaction] = useState({
+        route:'usda',
         account: '',
         amount: '',
     });

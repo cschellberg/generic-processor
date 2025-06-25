@@ -24,6 +24,7 @@ public class TransactionEngineManager {
     var nodeConfig = yamlReader.getNodeConfig(source);
     if (nodeConfig.getNodes() != null && !nodeConfig.getNodes().isEmpty()) {
       var dependsOnMap = getDependsOnMap(nodeConfig);
+      var beanMap = getBeanMap(nodeConfig);
       for (var node : nodeConfig.getNodes()) {
         var parentName = node.keySet().iterator().next();
         var details = node.get(parentName);
@@ -36,9 +37,8 @@ public class TransactionEngineManager {
           if (dependsList == null) {
             dependsList = List.of();
           }
-          var className = details.getClassName();
-          Class<?> loadedClass = Class.forName(className);
-          transactionEngine.add(parentName, child, dependsList, loadedClass);
+          var beanName = beanMap.get(child);
+          transactionEngine.add(parentName, child, dependsList, beanName);
         }
       }
     }
@@ -59,6 +59,17 @@ public class TransactionEngineManager {
       if (dependsOnList != null) {
         map.put(nodeName, dependsOnList);
       }
+    }
+    return map;
+  }
+
+  private Map<String, String> getBeanMap(NodeConfig nodeConfig) {
+    var map = new HashMap<String, String>();
+    for (var node : nodeConfig.getNodes()) {
+      var nodeName = node.keySet().iterator().next();
+      var details = node.get(nodeName);
+      var beanName = details.getBeanName();
+      map.put(nodeName, beanName);
     }
     return map;
   }

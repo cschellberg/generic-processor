@@ -9,7 +9,7 @@ import lombok.Data;
 public class NodeDetails {
   private List<String> children;
   private List<String> dependsOn;
-  private String className;
+  private String beanName;
 
   // Default constructor for Jackson
   public NodeDetails() {}
@@ -19,10 +19,10 @@ public class NodeDetails {
   public NodeDetails(
       @JsonProperty("children") List<String> children,
       @JsonProperty("dependsOn") List<String> dependsOn,
-      @JsonProperty("className") String className) {
+      @JsonProperty("beanName") String beanName) {
     this.children = children;
     this.dependsOn = dependsOn;
-    this.className = className;
+    this.beanName = beanName;
   }
 
   @Override
@@ -32,8 +32,8 @@ public class NodeDetails {
         + children
         + ", dependsOn="
         + dependsOn
-        + ", className='"
-        + className
+        + ", beanName='"
+        + beanName
         + '\''
         + '}';
   }

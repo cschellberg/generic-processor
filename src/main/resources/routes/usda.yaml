@@ -4,29 +4,29 @@ nodes:
         - authorize
         - purchase
       dependsOn:
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - authorize:
       children:
         - finalize
       dependsOn:
         - input
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getAuthorizerNode
   - purchase:
       children:
         - finalize
       dependsOn:
         - input
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getPurchaseNode
   - finalize:
       children:
         - output
       dependsOn:
         - authorize
         - purchase
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - output:
       children:
       dependsOn:
         - finalize
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
 

@@ -13,4 +13,5 @@ public class Transaction {
   private final Double amount;
   private String response;
   private String responseDescription;
+  private String route;
 }

@@ -4,32 +4,32 @@ nodes:
         - node1
         - node2
       dependsOn:
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - node1:
       children:
         - node3
         - node5
       dependsOn:
         - input
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - node2:
       children:
         - node4
       dependsOn:
         - input
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - node3:
       children:
       dependsOn:
         - node1
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - node4:
       children:
       dependsOn:
         - node2
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode
   - node5:
       children:
       dependsOn:
         - node1
-      className: com.example.membersapp.nodes.TreeNode
+      beanName: getTreeNode

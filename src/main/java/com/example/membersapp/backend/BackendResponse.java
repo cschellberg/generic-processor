@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class BackendResponse {
-  private final String response;
+  private String response;
 }

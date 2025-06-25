@@ -1,8 +1,6 @@
 package com.example.membersapp.backend;
 
 import java.time.Duration;
-
-import com.example.membersapp.engine.TransactionEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,13 +16,13 @@ public class BackendConnector {
     this.webClient = webClient;
   }
 
-  public Mono<String> getResponse() {
-      try {
-          Thread.sleep(300);
-      } catch (InterruptedException e) {
-        LOG.info("Sleep interrupted");
-      }
-      return webClient
+  public Mono<BackendResponse> getResponse() {
+    try {
+      Thread.sleep(300);
+    } catch (InterruptedException e) {
+      LOG.info("Sleep interrupted");
+    }
+    return webClient
         .get()
         .uri("/backend/request")
         .retrieve()
@@ -37,7 +35,7 @@ public class BackendConnector {
         .onStatus(
             HttpStatusCode::is5xxServerError, // Generic server error handling
             response -> Mono.error(new RuntimeException("Server Error: " + response.statusCode())))
-        .bodyToMono(String.class)
+        .bodyToMono(BackendResponse.class)
         .timeout(Duration.ofSeconds(1)); // Convert the response body to a Mono of Post object
   }
 }

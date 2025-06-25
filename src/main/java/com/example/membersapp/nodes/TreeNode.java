@@ -2,13 +2,12 @@ package com.example.membersapp.nodes;
 
 import com.example.membersapp.backend.BackendConnector;
 import com.example.membersapp.model.Metric;
+import com.example.membersapp.model.TransactionResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-
-import com.example.membersapp.model.TransactionResponse;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +15,10 @@ import org.slf4j.LoggerFactory;
 @Data
 public class TreeNode implements TreeNodeInterface {
   private static final Logger LOG = LoggerFactory.getLogger(TreeNode.class);
-  private String name;
+  protected String name;
   private String nextNode;
   private final List<TreeNodeInterface> children = new ArrayList<>();
-  private BackendConnector backendConnector;
+  protected BackendConnector backendConnector;
   private List<String> dependsOn = new ArrayList<>();
 
   public TreeNode(String name) {
@@ -52,7 +51,7 @@ public class TreeNode implements TreeNodeInterface {
               response -> {
                 LOG.info("Node {} is executing with workingMap {}", name, workingMap);
                 metric.endWithSuccess();
-                future.complete(new TransactionResponse(response));
+                future.complete(new TransactionResponse(response.getResponse()));
               },
               error -> {
                 LOG.error("Node {} failed execution because {}", name, error.toString());

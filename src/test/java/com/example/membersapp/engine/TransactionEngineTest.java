@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,14 +39,13 @@ public class TransactionEngineTest {
     server = new WireMockServer(wireMockConfig().port(8888));
     server.start();
     server.stubFor(
-            get(urlEqualTo("/backend/request"))
-                    .willReturn(
-                            aResponse() // return this response
-                                    .withStatus(HttpStatus.OK.value())
-                                    .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                                    .withBody("{\"response\":\"hello\"}")));
-   LOG.info("WireMock Server started");
-
+        get(urlEqualTo("/backend/request"))
+            .willReturn(
+                aResponse() // return this response
+                    .withStatus(HttpStatus.OK.value())
+                    .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                    .withBody("{\"response\":\"hello\"}")));
+    LOG.info("WireMock Server started");
   }
 
   @AfterAll
@@ -57,7 +55,7 @@ public class TransactionEngineTest {
 
   @BeforeEach
   void setUp() throws ClassNotFoundException {
-    if ( transactionEngine == null ) {
+    if (transactionEngine == null) {
       var transactionEngineManager = applicationContext.getBean(TransactionEngineManager.class);
       transactionEngine = transactionEngineManager.getTransactionEngine("usda");
     }
@@ -69,25 +67,27 @@ public class TransactionEngineTest {
   }
 
   @Test
-  public void performanceTest(){
-    long timer=System.currentTimeMillis();
-    var futureList=new ArrayList<CompletableFuture<Void>>();
-    for (int i=0;i<100;i++) {
-      futureList.add(CompletableFuture.runAsync(() -> {
-          try {
-              executeTransaction();
-          } catch (Exception e) {
-             fail("Performance test failed on execution");
-          }
-      }));
+  public void performanceTest() {
+    long timer = System.currentTimeMillis();
+    var futureList = new ArrayList<CompletableFuture<Void>>();
+    for (int i = 0; i < 100; i++) {
+      futureList.add(
+          CompletableFuture.runAsync(
+              () -> {
+                try {
+                  executeTransaction();
+                } catch (Exception e) {
+                  fail("Performance test failed on execution");
+                }
+              }));
     }
     CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0])).join();
-    LOG.info("Performance test completed in {} ms",(System.currentTimeMillis()-timer));
+    LOG.info("Performance test completed in {} ms", (System.currentTimeMillis() - timer));
   }
 
   private void executeTransaction() {
     try {
-      var transaction = new Transaction(  "123456789012345",199.99);
+      var transaction = new Transaction("123456789012345", 199.99);
       transaction.setTransactionDate(new Date());
       transaction.setTransactionId("123456");
       var mapper = new ObjectMapper();
@@ -96,11 +96,11 @@ public class TransactionEngineTest {
       var metricList = new ArrayList<Metric>();
       requestMap.put("request", jsonMap);
       transactionEngine.execute(requestMap, metricList);
-      assertTrue(metricList.size()>2);
+      assertTrue(metricList.size() > 2);
       metricList.forEach(metric -> assertTrue(metric.getSuccess()));
       LOG.info("Transaction Successfully Executed with metrics {}", metricList);
     } catch (Exception ex) {
-      LOG.error("Unable to execute tree node because {}", ex.getMessage(),ex);
+      LOG.error("Unable to execute tree node because {}", ex.getMessage(), ex);
     }
   }
 }
