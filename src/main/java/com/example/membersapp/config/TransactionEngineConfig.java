@@ -37,11 +37,11 @@ public class TransactionEngineConfig {
   @Bean
   public BackendConnector backendConnector(WebClient.Builder webClientBuilder) {
     var webClient =
-            webClientBuilder
-                    .baseUrl(backendUrl)
-                    .defaultHeaders(
-                            headers -> headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)))
-                    .build();
+        webClientBuilder
+            .baseUrl(backendUrl)
+            .defaultHeaders(
+                headers -> headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)))
+            .build();
     return new BackendConnector(webClient);
   }
 
@@ -53,13 +53,15 @@ public class TransactionEngineConfig {
 
   @Bean
   @Scope("prototype")
-  public TreeNode getAuthorizerNode(@Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
+  public TreeNode getAuthorizerNode(
+      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
     return new AuthorizerNode(backendConnector);
   }
 
   @Bean
   @Scope("prototype")
-  public TreeNode getPurchaseNode(@Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
+  public TreeNode getPurchaseNode(
+      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
     return new PurchaseNode(backendConnector);
   }
 

@@ -1,11 +1,11 @@
 package com.example.membersapp.nodes;
 
 import com.example.membersapp.backend.BackendConnector;
+import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.TransactionResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import lombok.Data;
@@ -30,26 +30,23 @@ public class TreeNode implements TreeNodeInterface {
   }
 
   @Override
-  public CompletableFuture<TransactionResponse> execute(
-      Map<String, Object> workingMap, List<Metric> metricList) {
+  public CompletableFuture<TransactionResponse> execute(Message message, List<Metric> metricList) {
     CompletableFuture<TransactionResponse> future = new CompletableFuture<>();
     setNextNode();
     var metric = new Metric(name);
     metricList.add(metric);
-    executeBody(workingMap, future, metric);
+    executeBody(message, future, metric);
     return future;
   }
 
   protected void executeBody(
-      Map<String, Object> workingMap,
-      CompletableFuture<TransactionResponse> future,
-      Metric metric) {
+      Message message, CompletableFuture<TransactionResponse> future, Metric metric) {
     if (backendConnector != null) {
       backendConnector
           .getResponse()
           .subscribe(
               response -> {
-                LOG.info("Node {} is executing with workingMap {}", name, workingMap);
+                LOG.info("Node {} is executing with workingMap {}", name, message);
                 metric.endWithSuccess();
                 future.complete(new TransactionResponse(response.getResponse()));
               },

@@ -1,8 +1,8 @@
 package com.example.membersapp.controller;
 
 import com.example.membersapp.engine.TransactionEngineManager;
+import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Transaction;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
@@ -23,15 +23,15 @@ public class TransactionController {
   public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction)
       throws ClassNotFoundException, ExecutionException, InterruptedException, TimeoutException {
     var transactionEngine = transactionEngineManager.getTransactionEngine(transaction.getRoute());
-    Map<String, Object> map = null;
+    Message message = null;
     try {
-      map = transactionEngine.execute(transaction);
+      message = transactionEngine.execute(transaction);
     } catch (Exception e) {
       transaction.setResponse("099");
       transaction.setResponseDescription(e.getMessage());
       return new ResponseEntity<>(transaction, HttpStatus.NOT_ACCEPTABLE);
     }
-    LOG.info("Transaction created {}", map);
+    LOG.info("Transaction created {}", message);
     return new ResponseEntity<>(transaction, HttpStatus.CREATED);
   }
 }

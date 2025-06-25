@@ -1,5 +1,6 @@
 package com.example.membersapp.engine;
 
+import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
 import com.example.membersapp.model.TransactionResponse;
@@ -54,32 +55,29 @@ public class TransactionEngine {
     return null;
   }
 
-  public Map<String, Object> execute(Transaction transaction)
+  public Message execute(Transaction transaction)
       throws ExecutionException, InterruptedException, TimeoutException {
     var mapper = new ObjectMapper();
     transaction.setTransactionDate(new Date());
     transaction.setTransactionId(getTransactionId());
-    var jsonMap = mapper.convertValue(transaction, Map.class);
-    var workingMap = new HashMap<String, Object>();
+    var message = new Message(transaction);
     var metricList = new ArrayList<Metric>();
-    workingMap.put("request", jsonMap);
-    workingMap.put("response", new HashMap<String, Object>());
-    return execute(workingMap, metricList);
+    return execute(message, metricList);
   }
 
-  public Map<String, Object> execute(Map<String, Object> workingMap, List<Metric> metricList)
+  public Message execute(Message message, List<Metric> metricList)
       throws ExecutionException, InterruptedException, TimeoutException {
     var completableFutureMap = new HashMap<String, CompletableFuture<TransactionResponse>>();
-    this.execute(completableFutureMap, List.of(root), workingMap, metricList);
+    this.execute(completableFutureMap, List.of(root), message, metricList);
     CompletableFuture.allOf(completableFutureMap.values().toArray(new CompletableFuture[0]))
         .get(30, TimeUnit.SECONDS);
-    return workingMap;
+    return message;
   }
 
   private void execute(
       Map<String, CompletableFuture<TransactionResponse>> completableFutureMap,
       List<TreeNodeInterface> treeNodes,
-      Map<String, Object> workingMap,
+      Message message,
       List<Metric> metricList)
       throws ExecutionException, InterruptedException {
     var childNodes = new ArrayList<TreeNodeInterface>();
@@ -94,7 +92,7 @@ public class TransactionEngine {
         var dependsOnArray = dependsOnList.toArray(new CompletableFuture[0]);
         CompletableFuture.allOf(dependsOnArray).get();
       }
-      completableFutureMap.put(treeNode.getName(), treeNode.execute(workingMap, metricList));
+      completableFutureMap.put(treeNode.getName(), treeNode.execute(message, metricList));
       var selectNodes =
           treeNode.getChildren().stream()
               .filter(
@@ -106,7 +104,7 @@ public class TransactionEngine {
       childNodes.addAll(selectNodes);
     }
     if (!childNodes.isEmpty()) {
-      execute(completableFutureMap, childNodes, workingMap, metricList);
+      execute(completableFutureMap, childNodes, message, metricList);
     }
   }
 

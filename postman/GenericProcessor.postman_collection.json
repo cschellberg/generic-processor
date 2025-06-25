@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "96ec377e-bb91-4020-b58e-475d0852d9cb",
+		"name": "GenericProcessor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13681477"
+	},
+	"item": [
+		{
+			"name": "BackendRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"port\": 9999,\r\n  \"protocol\": \"http\",\r\n  \"stubs\": [\r\n    {\r\n      \"predicates\": [\r\n        {\r\n          \"equals\": {\r\n            \"path\": \"/backend/request\"\r\n          }\r\n        }\r\n      ],\r\n      \"responses\": [\r\n        {\r\n          \"is\": {\r\n            \"statusCode\": 200,\r\n            \"headers\": {\r\n              \"Content-Type\": \"application/json\"\r\n            },\r\n            \"body\": {\r\n              \"response\": \"hello\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:2525/imposters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2525",
+					"path": [
+						"imposters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthorizerBackendRequest",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"port\": 9998,\r\n  \"protocol\": \"http\",\r\n  \"stubs\": [\r\n    {\r\n      \"predicates\": [\r\n        {\r\n          \"equals\": {\r\n            \"path\": \"/backend/request\"\r\n          }\r\n        }\r\n      ],\r\n      \"responses\": [\r\n        {\r\n          \"is\": {\r\n            \"statusCode\": 200,\r\n            \"headers\": {\r\n              \"Content-Type\": \"application/json\"\r\n            },\r\n            \"body\": {\r\n              \"response\": \"hello\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:2525/imposters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2525",
+					"path": [
+						"imposters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteBackendRequest",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"port\": 9999,\r\n  \"protocol\": \"http\",\r\n  \"stubs\": [\r\n    {\r\n      \"predicates\": [\r\n        {\r\n          \"equals\": {\r\n            \"path\": \"/backend/request\"\r\n          }\r\n        }\r\n      ],\r\n      \"responses\": [\r\n        {\r\n          \"is\": {\r\n            \"statusCode\": 200,\r\n            \"headers\": {\r\n              \"Content-Type\": \"application/json\"\r\n            },\r\n            \"body\": {\r\n              \"response\": \"hello\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:2525/imposters/9999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2525",
+					"path": [
+						"imposters",
+						"9999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteAuthorizerBackendRequest",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"port\": 9999,\r\n  \"protocol\": \"http\",\r\n  \"stubs\": [\r\n    {\r\n      \"predicates\": [\r\n        {\r\n          \"equals\": {\r\n            \"path\": \"/backend/request\"\r\n          }\r\n        }\r\n      ],\r\n      \"responses\": [\r\n        {\r\n          \"is\": {\r\n            \"statusCode\": 200,\r\n            \"headers\": {\r\n              \"Content-Type\": \"application/json\"\r\n            },\r\n            \"body\": {\r\n              \"response\": \"hello\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:2525/imposters/9998",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2525",
+					"path": [
+						"imposters",
+						"9998"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBackends",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"port\": 9999,\r\n  \"protocol\": \"http\",\r\n  \"stubs\": [\r\n    {\r\n      \"predicates\": [\r\n        {\r\n          \"equals\": {\r\n            \"path\": \"/backend/request\"\r\n          }\r\n        }\r\n      ],\r\n      \"responses\": [\r\n        {\r\n          \"is\": {\r\n            \"statusCode\": 200,\r\n            \"headers\": {\r\n              \"Content-Type\": \"application/json\"\r\n            },\r\n            \"body\": {\r\n              \"response\": \"hello\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:2525/imposters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2525",
+					"path": [
+						"imposters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BackendRequest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9999/backend/request",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"backend",
+						"request"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

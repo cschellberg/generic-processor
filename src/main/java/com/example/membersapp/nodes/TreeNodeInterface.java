@@ -1,15 +1,14 @@
 package com.example.membersapp.nodes;
 
+import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.TransactionResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface TreeNodeInterface {
 
-  CompletableFuture<TransactionResponse> execute(
-      Map<String, Object> workingMap, List<Metric> metricList);
+  CompletableFuture<TransactionResponse> execute(Message message, List<Metric> metricList);
 
   String getName();
 
