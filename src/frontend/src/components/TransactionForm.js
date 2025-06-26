@@ -7,8 +7,9 @@ const API_BASE_URL = '/api/transaction'; // Your Spring Boot API endpoint
 function TransactionForm() {
     const [transaction, setTransaction] = useState({
         route:'usda',
-        account: '',
-        amount: '',
+        account_number: '',
+        transaction_amount: '',
+        operation: 'authorization',
     });
     const [showForm, setShowForm] = useState(true);
     // State to store the submitted API response data
@@ -51,8 +52,8 @@ function TransactionForm() {
                     <input
                         type="text"
                         id="account"
-                        name="account"
-                        value={transaction.account}
+                        name="account_number"
+                        value={transaction.account_number}
                         onChange={handleChange}
                         required
                     />
@@ -62,11 +63,27 @@ function TransactionForm() {
                     <input
                         type="text"
                         id="amount"
-                        name="amount"
-                        value={transaction.amount}
+                        name="transaction_amount"
+                        value={transaction.transaction_amount}
                         onChange={handleChange}
                         required
                     />
+                </div>
+                <div className="form-group">
+                    <br/>
+                    <label htmlFor="operation">
+                        Operation Type
+                    </label>
+                    <select
+                        id="operation"
+                        name="operation"
+                        value={transaction.operation}
+                        onChange={handleChange}
+                    >
+                        <option value="authorization">Authorization</option>
+                        <option value="purchase">Purchase</option>
+                    </select>
+                    <br/>
                 </div>
                 <button type="submit" className="save-button">
                     Create Transaction

@@ -25,6 +25,7 @@ public class TransactionEngineManager {
     if (nodeConfig.getNodes() != null && !nodeConfig.getNodes().isEmpty()) {
       var dependsOnMap = getDependsOnMap(nodeConfig);
       var beanMap = getBeanMap(nodeConfig);
+      transactionEngine.addToRoot(nodeConfig.getNodes().getFirst());
       for (var node : nodeConfig.getNodes()) {
         var parentName = node.keySet().iterator().next();
         var details = node.get(parentName);

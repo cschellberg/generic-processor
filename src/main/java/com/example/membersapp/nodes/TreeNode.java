@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class TreeNode implements TreeNodeInterface {
   private static final Logger LOG = LoggerFactory.getLogger(TreeNode.class);
   protected String name;
-  private String nextNode;
+  protected String nextNode;
   private final List<TreeNodeInterface> children = new ArrayList<>();
   protected BackendConnector backendConnector;
   private List<String> dependsOn = new ArrayList<>();
@@ -31,7 +31,7 @@ public class TreeNode implements TreeNodeInterface {
   @Override
   public CompletableFuture<Void> execute(Message message, List<Metric> metricList) {
     CompletableFuture<Void> future = new CompletableFuture<>();
-    setNextNode();
+    setNextNode(message);
     var metric = new Metric(name);
     metricList.add(metric);
     executeBody(message, future, metric);
@@ -59,7 +59,7 @@ public class TreeNode implements TreeNodeInterface {
     }
   }
 
-  protected void setNextNode() {
+  protected void setNextNode(Message message) {
     var random = new Random();
     if (!children.isEmpty()) {
       nextNode = (children.get(random.nextInt(children.size())).getName());
