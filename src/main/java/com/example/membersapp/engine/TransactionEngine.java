@@ -3,8 +3,9 @@ package com.example.membersapp.engine;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
-import com.example.membersapp.nodes.TreeNode;
+import com.example.membersapp.nodes.RootNode;
 import com.example.membersapp.nodes.TreeNodeInterface;
+import com.example.membersapp.orchestrator.NodeDetails;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,10 +23,20 @@ public class TransactionEngine {
   private static final Logger LOG = LoggerFactory.getLogger(TransactionEngine.class);
   public static final String INPUT = "input";
   public static final String OUTPUT = "output";
+  public static final String ROOT = "root";
   @Autowired private ApplicationContext applicationContext;
 
   public TransactionEngine() {
-    root = new TreeNode(INPUT);
+    root = new RootNode();
+  }
+
+  public void addToRoot(Map<String, NodeDetails> firstNode) {
+    var firstNodeName = firstNode.keySet().stream().findFirst().get();
+    var firstNodeDetails = firstNode.get(firstNodeName);
+    var treeNode = (TreeNodeInterface) applicationContext.getBean(firstNodeDetails.getBeanName());
+    treeNode.setName(firstNodeName);
+    treeNode.setDependsOn(List.of(ROOT));
+    root.addChild(treeNode);
   }
 
   public void add(String parentName, String childName, List<String> dependsOn, String beanName) {

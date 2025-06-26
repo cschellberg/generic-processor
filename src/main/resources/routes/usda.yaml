@@ -1,11 +1,11 @@
 nodes:
   - input:
       children:
-        - authorize
+        - authorization
         - purchase
       dependsOn:
-      beanName: getTreeNode
-  - authorize:
+      beanName: getRouterNode
+  - authorization:
       children:
         - finalize
       dependsOn:
@@ -21,7 +21,7 @@ nodes:
       children:
         - output
       dependsOn:
-        - authorize
+        - authorization
         - purchase
       beanName: getTreeNode
   - output:

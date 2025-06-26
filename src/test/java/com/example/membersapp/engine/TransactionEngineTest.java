@@ -85,9 +85,12 @@ public class TransactionEngineTest {
 
   private void executeTransaction() {
     try {
-      var transaction = new Transaction("123456789012345", 199.99);
+      var transaction = new Transaction();
+      transaction.setAccount("123456789012345");
+      transaction.setAmount(199.99);
       transaction.setTransactionDate(new Date());
       transaction.setTransactionId("123456");
+      transaction.setOperation("authorization");
       var message = new Message(transaction);
       var metricList = new ArrayList<Metric>();
       transactionEngine.execute(message, metricList);

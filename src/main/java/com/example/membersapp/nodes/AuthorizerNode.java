@@ -19,7 +19,6 @@ public class AuthorizerNode extends TreeNode {
 
   @Override
   protected void executeBody(Message message, CompletableFuture<Void> future, Metric metric) {
-    message.addToScratchPad(OPERATION, this.getName());
     backendConnector
         .getResponse()
         .subscribe(
