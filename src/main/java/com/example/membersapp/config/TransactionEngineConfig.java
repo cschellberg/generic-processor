@@ -1,9 +1,12 @@
 package com.example.membersapp.config;
 
+import static com.example.membersapp.engine.TransactionEngine.OUTPUT;
+
 import com.example.membersapp.backend.BackendConnector;
 import com.example.membersapp.engine.TransactionEngine;
 import com.example.membersapp.nodes.AuthorizerNode;
 import com.example.membersapp.nodes.PurchaseNode;
+import com.example.membersapp.nodes.TransactionOutputNode;
 import com.example.membersapp.nodes.TreeNode;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,6 +66,12 @@ public class TransactionEngineConfig {
   public TreeNode getPurchaseNode(
       @Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
     return new PurchaseNode(backendConnector);
+  }
+
+  @Bean
+  @Scope("prototype")
+  public TreeNode getTransactionOutputNode() {
+    return new TransactionOutputNode(OUTPUT);
   }
 
   @Bean

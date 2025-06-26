@@ -5,14 +5,12 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -90,12 +88,9 @@ public class TransactionEngineTest {
       var transaction = new Transaction("123456789012345", 199.99);
       transaction.setTransactionDate(new Date());
       transaction.setTransactionId("123456");
-      var mapper = new ObjectMapper();
-      var jsonMap = mapper.convertValue(transaction, Map.class);
-      var requestMap = new HashMap<String, Object>();
+      var message = new Message(transaction);
       var metricList = new ArrayList<Metric>();
-      requestMap.put("request", jsonMap);
-      transactionEngine.execute(requestMap, metricList);
+      transactionEngine.execute(message, metricList);
       assertTrue(metricList.size() > 2);
       metricList.forEach(metric -> assertTrue(metric.getSuccess()));
       LOG.info("Transaction Successfully Executed with metrics {}", metricList);

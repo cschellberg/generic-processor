@@ -28,5 +28,5 @@ nodes:
       children:
       dependsOn:
         - finalize
-      beanName: getTreeNode
+      beanName: getTransactionOutputNode
 

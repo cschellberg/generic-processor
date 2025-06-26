@@ -1,12 +1,10 @@
 package com.example.membersapp.nodes;
 
-import static com.example.membersapp.model.Message.RESPONSE_CODE;
-import static com.example.membersapp.model.Message.RESPONSE_DESCRIPTION;
+import static com.example.membersapp.model.Message.*;
 
 import com.example.membersapp.backend.BackendConnector;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
-import com.example.membersapp.model.TransactionResponse;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +18,8 @@ public class AuthorizerNode extends TreeNode {
   }
 
   @Override
-  protected void executeBody(
-      Message message, CompletableFuture<TransactionResponse> future, Metric metric) {
+  protected void executeBody(Message message, CompletableFuture<Void> future, Metric metric) {
+    message.addToScratchPad(OPERATION, this.getName());
     backendConnector
         .getResponse()
         .subscribe(
@@ -30,7 +28,7 @@ public class AuthorizerNode extends TreeNode {
               metric.endWithSuccess();
               message.addToScratchPad(RESPONSE_CODE, "000");
               message.addToScratchPad(RESPONSE_DESCRIPTION, "Approved");
-              future.complete(new TransactionResponse(response.getResponse()));
+              future.complete(null);
             },
             error -> {
               LOG.error("Node {} failed execution because {}", name, error.toString());

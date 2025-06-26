@@ -3,7 +3,6 @@ package com.example.membersapp.nodes;
 import com.example.membersapp.backend.BackendConnector;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
-import com.example.membersapp.model.TransactionResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,8 +29,8 @@ public class TreeNode implements TreeNodeInterface {
   }
 
   @Override
-  public CompletableFuture<TransactionResponse> execute(Message message, List<Metric> metricList) {
-    CompletableFuture<TransactionResponse> future = new CompletableFuture<>();
+  public CompletableFuture<Void> execute(Message message, List<Metric> metricList) {
+    CompletableFuture<Void> future = new CompletableFuture<>();
     setNextNode();
     var metric = new Metric(name);
     metricList.add(metric);
@@ -39,8 +38,7 @@ public class TreeNode implements TreeNodeInterface {
     return future;
   }
 
-  protected void executeBody(
-      Message message, CompletableFuture<TransactionResponse> future, Metric metric) {
+  protected void executeBody(Message message, CompletableFuture<Void> future, Metric metric) {
     if (backendConnector != null) {
       backendConnector
           .getResponse()
@@ -48,7 +46,7 @@ public class TreeNode implements TreeNodeInterface {
               response -> {
                 LOG.info("Node {} is executing with workingMap {}", name, message);
                 metric.endWithSuccess();
-                future.complete(new TransactionResponse(response.getResponse()));
+                future.complete(null);
               },
               error -> {
                 LOG.error("Node {} failed execution because {}", name, error.toString());
@@ -57,7 +55,7 @@ public class TreeNode implements TreeNodeInterface {
               });
     } else {
       metric.endWithSuccess();
-      future.complete(new TransactionResponse("no backend connector available"));
+      future.complete(null);
     }
   }
 

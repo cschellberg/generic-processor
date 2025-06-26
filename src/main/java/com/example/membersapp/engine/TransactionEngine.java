@@ -3,10 +3,8 @@ package com.example.membersapp.engine;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
-import com.example.membersapp.model.TransactionResponse;
 import com.example.membersapp.nodes.TreeNode;
 import com.example.membersapp.nodes.TreeNodeInterface;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +21,7 @@ public class TransactionEngine {
   private final TreeNodeInterface root;
   private static final Logger LOG = LoggerFactory.getLogger(TransactionEngine.class);
   public static final String INPUT = "input";
+  public static final String OUTPUT = "output";
   @Autowired private ApplicationContext applicationContext;
 
   public TransactionEngine() {
@@ -30,9 +29,12 @@ public class TransactionEngine {
   }
 
   public void add(String parentName, String childName, List<String> dependsOn, String beanName) {
-    var treeNode = (TreeNodeInterface) applicationContext.getBean(beanName);
-    treeNode.setName(childName);
-    treeNode.setDependsOn(dependsOn);
+    var treeNode = findNode(childName, root);
+    if (treeNode == null) {
+      treeNode = (TreeNodeInterface) applicationContext.getBean(beanName);
+      treeNode.setName(childName);
+      treeNode.setDependsOn(dependsOn);
+    }
     var node = findNode(parentName, root);
     if (node != null) {
       node.addChild(treeNode);
@@ -57,7 +59,6 @@ public class TransactionEngine {
 
   public Message execute(Transaction transaction)
       throws ExecutionException, InterruptedException, TimeoutException {
-    var mapper = new ObjectMapper();
     transaction.setTransactionDate(new Date());
     transaction.setTransactionId(getTransactionId());
     var message = new Message(transaction);
@@ -67,7 +68,7 @@ public class TransactionEngine {
 
   public Message execute(Message message, List<Metric> metricList)
       throws ExecutionException, InterruptedException, TimeoutException {
-    var completableFutureMap = new HashMap<String, CompletableFuture<TransactionResponse>>();
+    var completableFutureMap = new HashMap<String, CompletableFuture<Void>>();
     this.execute(completableFutureMap, List.of(root), message, metricList);
     CompletableFuture.allOf(completableFutureMap.values().toArray(new CompletableFuture[0]))
         .get(30, TimeUnit.SECONDS);
@@ -75,22 +76,22 @@ public class TransactionEngine {
   }
 
   private void execute(
-      Map<String, CompletableFuture<TransactionResponse>> completableFutureMap,
+      Map<String, CompletableFuture<Void>> completableFutureMap,
       List<TreeNodeInterface> treeNodes,
       Message message,
-      List<Metric> metricList)
-      throws ExecutionException, InterruptedException {
+      List<Metric> metricList) {
     var childNodes = new ArrayList<TreeNodeInterface>();
     for (TreeNodeInterface treeNode : treeNodes) {
       if (!treeNode.getDependsOn().isEmpty()) {
-        var dependsOnList = new ArrayList<CompletableFuture<TransactionResponse>>();
+        var dependsOnList = new ArrayList<CompletableFuture<Void>>();
         for (String name : treeNode.getDependsOn()) {
           if (completableFutureMap.containsKey(name)) {
             dependsOnList.add(completableFutureMap.get(name));
           }
         }
         var dependsOnArray = dependsOnList.toArray(new CompletableFuture[0]);
-        CompletableFuture.allOf(dependsOnArray).get();
+        CompletableFuture.allOf(dependsOnArray).join();
+        LOG.info("Depends on: {} treeNode {} waiting...", treeNode.getName(), dependsOnList);
       }
       completableFutureMap.put(treeNode.getName(), treeNode.execute(message, metricList));
       var selectNodes =

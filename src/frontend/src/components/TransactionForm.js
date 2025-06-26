@@ -10,6 +10,14 @@ function TransactionForm() {
         account: '',
         amount: '',
     });
+    const [showForm, setShowForm] = useState(true);
+    // State to store the submitted API response data
+    const [apiResponse, setApiResponse] = useState(null);
+
+    const handleGoBack = () => {
+        setApiResponse(null); // Clear previous data
+        setShowForm(true); // Show the form again
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +30,10 @@ function TransactionForm() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
         try {
-            await axios.post(API_BASE_URL, transaction);
+            var response=await axios.post(API_BASE_URL, transaction);
+            console.log(response.data);
+            setApiResponse(response.data);
+            setShowForm(false);
         } catch (error) {
             console.error('Error posting transaction:', error);
             // Handle error
@@ -30,8 +41,10 @@ function TransactionForm() {
     };
 
     return (
+
         <div className="transaction-form">
             <h2>Transaction</h2>
+            {showForm ? (
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="account">Account:</label>
@@ -59,6 +72,20 @@ function TransactionForm() {
                     Create Transaction
                 </button>
             </form>
+            ) : (
+                    <div>
+                        <div>Operation: {apiResponse.operation}</div>
+                        <div>Response Code: {apiResponse.responseCode}</div>
+                        <div>Response Description: {apiResponse.responseMessage}</div>
+                        <div>Transaction ID: {apiResponse.transactionId}</div>
+                        <div>Account: {apiResponse.accountNumber}</div>
+                        <div>Amount: {apiResponse.transactionAmount}</div>
+                        <div>Transaction Date: {apiResponse.transactionDate}</div>
+                <button type="button" className="save-button" onClick={handleGoBack}>
+                Create Another Transaction
+                </button>
+                    </div>
+                )}
         </div>
     );
 }
