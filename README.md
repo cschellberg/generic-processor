@@ -8,10 +8,25 @@ input through the processing tree until the output node is reached which returns
 the calling client. When a node has multiple child nodes, it will decide via business logic what is
 the next node to be executed. It can only execute one node out of all the child nodes. If a given
 processing node is dependent on the results of previous nodes it will wait until the previous
-nodes have completed before it begins processing.
+nodes have completed before it begins processing.  
 Configuration is done via yaml files. Each yaml represents one client type with a unique input
 and output. When the app receives the request, the app will determine which input/output tree
-to use and app will traverse the decision trees until it reaches the output.
+to use and app will traverse the decision trees until it reaches the output.  
+The application uses Spring WebClient which is completely reactive and is based on the
+publish/subscribe model.  This means that a processing node won't block while waiting
+for a response from a backend microservice.  
+
+# Test Use Case
+
+The configuration of usda.yaml is a simple one.  It is basically decision tree that
+consists of either an authorization or a purchase.  A vehicle comes into a shop for
+repair and the job to work on the vehicle is the authorization(you still don't know what is 
+to be done or how much it will cost).  The authorization will be the limit that can be
+applied.  After the car is repaired and the actual amount is known, this will be the
+purchase and will further the financial request to the bank.  The use case is relatively
+simple but in real life many more processing nodes would be involved(i.e. looking up
+an account number via a driver ID)
+
 
 ![Diagram](images/GenericProcessor.jpg)
 
@@ -76,6 +91,15 @@ In your Docker Desktop you should see the following
     ![](images/transaction.jpg)
 16. The App should respond with something like this.
     ![](images/transaction_response.jpg)
+
+# Configuration 
+  To configure a transaction engine to service a given client create a yaml file in the resources/routes directory
+  An example can be seen in usda.yaml.  Order is important, the decision tree hierarchy will be determined by order.
+  The attributes are:  
+  - children: The list of children of the current node.  The current node will select
+    one out of the list(via the method setNexNode)
+  - dependsOn: the names of the previous nodes that the current node will wait for
+  - beanName: The name of the bean in the config file(i.e. getRouterNode)
 
 # More Information
 Please contact Donald Schellberg at dschellberg@gmail.com
