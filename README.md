@@ -75,7 +75,7 @@ In your Docker Desktop you should see the following
     You should see this
     ![](images/transaction.jpg)
 16. The App should respond with something like this.
-    ![](images\transaction_response.jpg)
+    ![](images/transaction_response.jpg)
 
 # More Information
 Please contact Donald Schellberg at dschellberg@gmail.com
