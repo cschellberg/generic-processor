@@ -25,3 +25,58 @@ secs giving a pass through of about 20 transactions/sec or 1.75 million transact
 Metrics and Graphs are done with open source libraries
 - Prometheus: For storing and querying time-series data.
 - Grafana: For graphing of data
+
+# Requirements for Running Locally
+- Java(SDK) 21
+- npm
+- React
+- Helm
+- Docker Desktop(with Kubernetes enabled)
+- Gradle 8.9
+- Postman (for building the mountebank imposters)
+- git
+- Intellij (or equivalent IDE)
+
+# Installation 
+
+1. Download and install the latest DockerDesktop version and enable Kubernetes
+2. Download and install Helm
+3. Download and install Postman(or equivalent)
+4. Download and install gradle
+5. Download and install java SDK 21
+6. Download and install Intellij(or equivalent)
+7. Clone this repo to your projects directory
+8. cd to the helm-charts directory.  
+9. Run the following command: helm install mountebank ./mountebank-chart
+
+In your Docker Desktop you should see the following
+
+![](images/docker-desktop.jpg)
+
+10. In Intellij gradle window run the following gradle tasks  
+    gradle clean and then gradle shadowJar.  This will build the application
+11. In Intellij install the kubernetes and helm plugins.  This will allow you to 
+    config the Kubernetes pods and services
+    In Intellij you should see something like this
+    ![](images/kubernetes_window.jpg)
+12. In the Kubernetes Intellij Window add port forwarding for ports 2525, 9998 and 9999
+    ![](images/port_forwarding.jpg)
+13. Run the two Postman post requests.  
+    BackendRequests and AuthorizeBackendRequests.
+    This will create the imposters you need to run the app
+
+13. In the src/main/java directory right click the ProcessorApplication and
+    run the application
+14. After about 30 seconds enter this address in your browser
+    http://localhost:8080/
+    You should see this:
+    ![](images/frontend.jpg)
+15. Chose transaction and enter in any account number and amount
+    You should see this
+    ![](images/transaction.jpg)
+16. The App should respond with something like this.
+    ![](images\transaction_response.jpg)
+
+# More Information
+Please contact Donald Schellberg at dschellberg@gmail.com
+    
