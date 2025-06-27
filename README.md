@@ -13,7 +13,7 @@ Configuration is done via yaml files. Each yaml represents one client type with 
 and output. When the app receives the request, the app will determine which input/output tree
 to use and app will traverse the decision trees until it reaches the output.
 
-![Diagram](images\GenericProcessor.jpg)
+![Diagram](images/GenericProcessor.jpg)
 
 # Testing
 Testing is done using WireMock to simulate a backend connection. In the test processing nodes
