@@ -66,4 +66,26 @@ public class Transaction {
   public void setOperation(String operation) {
     this.operation = operation;
   }
+
+  @Override
+  public String toString() {
+    return "Transaction{"
+        + "transactionId='"
+        + transactionId
+        + '\''
+        + ", transactionDate="
+        + transactionDate
+        + ", account='"
+        + account
+        + '\''
+        + ", amount="
+        + amount
+        + ", route='"
+        + route
+        + '\''
+        + ", operation='"
+        + operation
+        + '\''
+        + '}';
+  }
 }

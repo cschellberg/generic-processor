@@ -2,11 +2,9 @@ package com.example.membersapp.engine;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.example.membersapp.model.Message;
-import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.ArrayList;
@@ -92,11 +90,8 @@ public class TransactionEngineTest {
       transaction.setTransactionId("123456");
       transaction.setOperation("authorization");
       var message = new Message(transaction);
-      var metricList = new ArrayList<Metric>();
-      transactionEngine.execute(message, metricList);
-      assertTrue(metricList.size() > 2);
-      metricList.forEach(metric -> assertTrue(metric.getSuccess()));
-      LOG.info("Transaction Successfully Executed with metrics {}", metricList);
+      transactionEngine.execute(message);
+      LOG.info("Transaction Successfully Executed with metrics ");
     } catch (Exception ex) {
       LOG.error("Unable to execute tree node because {}", ex.getMessage(), ex);
     }

@@ -5,7 +5,9 @@ import static com.example.membersapp.engine.TransactionEngine.OUTPUT;
 
 import com.example.membersapp.backend.BackendConnector;
 import com.example.membersapp.engine.TransactionEngine;
+import com.example.membersapp.metric.Metrics;
 import com.example.membersapp.nodes.*;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,11 @@ public class TransactionEngineConfig {
 
   @Value("${authorizer.backend.url:http://localhost:9998}")
   private String authorizerBackendUrl;
+
+  @Bean
+  public Metrics metrics(MeterRegistry meterRegistry) {
+    return new Metrics(meterRegistry);
+  }
 
   @Bean
   public BackendConnector authorizerBackendConnector(WebClient.Builder webClientBuilder) {
@@ -48,34 +55,35 @@ public class TransactionEngineConfig {
 
   @Bean
   @Scope("prototype")
-  public TreeNode getTreeNode(@Qualifier("backendConnector") BackendConnector backendConnector) {
-    return new TreeNode(backendConnector);
+  public TreeNode getTreeNode(
+      @Qualifier("backendConnector") BackendConnector backendConnector, Metrics metrics) {
+    return new TreeNode(backendConnector, metrics);
   }
 
   @Bean
   @Scope("prototype")
   public TreeNode getAuthorizerNode(
-      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
-    return new AuthorizerNode(backendConnector);
+      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector, Metrics metrics) {
+    return new AuthorizerNode(backendConnector, metrics);
   }
 
   @Bean
   @Scope("prototype")
   public TreeNode getPurchaseNode(
-      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector) {
-    return new PurchaseNode(backendConnector);
+      @Qualifier("authorizerBackendConnector") BackendConnector backendConnector, Metrics metrics) {
+    return new PurchaseNode(backendConnector, metrics);
   }
 
   @Bean
   @Scope("prototype")
-  public TreeNode getTransactionOutputNode() {
-    return new TransactionOutputNode(OUTPUT);
+  public TreeNode getTransactionOutputNode(Metrics metrics) {
+    return new TransactionOutputNode(OUTPUT, metrics);
   }
 
   @Bean
   @Scope("prototype")
-  public TreeNode getRouterNode() {
-    return new RouterNode(INPUT);
+  public TreeNode getRouterNode(Metrics metrics) {
+    return new RouterNode(INPUT, metrics);
   }
 
   @Bean

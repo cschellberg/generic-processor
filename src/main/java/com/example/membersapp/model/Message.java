@@ -50,4 +50,16 @@ public class Message {
       System.err.println("Error during POJO to Map conversion with Jackson: " + e.getMessage());
     }
   }
+
+  @Override
+  public String toString() {
+    return "Message{"
+        + ", scratchPadMap="
+        + scratchPadMap
+        + ", response="
+        + response
+        + ", request="
+        + request
+        + '}';
+  }
 }

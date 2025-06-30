@@ -1,7 +1,6 @@
 package com.example.membersapp.engine;
 
 import com.example.membersapp.model.Message;
-import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.Transaction;
 import com.example.membersapp.nodes.RootNode;
 import com.example.membersapp.nodes.TreeNodeInterface;
@@ -73,14 +72,13 @@ public class TransactionEngine {
     transaction.setTransactionDate(new Date());
     transaction.setTransactionId(getTransactionId());
     var message = new Message(transaction);
-    var metricList = new ArrayList<Metric>();
-    return execute(message, metricList);
+    return execute(message);
   }
 
-  public Message execute(Message message, List<Metric> metricList)
+  public Message execute(Message message)
       throws ExecutionException, InterruptedException, TimeoutException {
     var completableFutureMap = new HashMap<String, CompletableFuture<Void>>();
-    this.execute(completableFutureMap, List.of(root), message, metricList);
+    this.execute(completableFutureMap, List.of(root), message);
     CompletableFuture.allOf(completableFutureMap.values().toArray(new CompletableFuture[0]))
         .get(30, TimeUnit.SECONDS);
     return message;
@@ -89,8 +87,7 @@ public class TransactionEngine {
   private void execute(
       Map<String, CompletableFuture<Void>> completableFutureMap,
       List<TreeNodeInterface> treeNodes,
-      Message message,
-      List<Metric> metricList) {
+      Message message) {
     var childNodes = new ArrayList<TreeNodeInterface>();
     for (TreeNodeInterface treeNode : treeNodes) {
       if (!treeNode.getDependsOn().isEmpty()) {
@@ -104,7 +101,7 @@ public class TransactionEngine {
         CompletableFuture.allOf(dependsOnArray).join();
         LOG.info("Depends on: {} treeNode {} waiting...", treeNode.getName(), dependsOnList);
       }
-      completableFutureMap.put(treeNode.getName(), treeNode.execute(message, metricList));
+      completableFutureMap.put(treeNode.getName(), treeNode.execute(message));
       var selectNodes =
           treeNode.getChildren().stream()
               .filter(
@@ -116,7 +113,7 @@ public class TransactionEngine {
       childNodes.addAll(selectNodes);
     }
     if (!childNodes.isEmpty()) {
-      execute(completableFutureMap, childNodes, message, metricList);
+      execute(completableFutureMap, childNodes, message);
     }
   }
 

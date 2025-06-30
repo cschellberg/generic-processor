@@ -2,8 +2,8 @@ package com.example.membersapp.nodes;
 
 import static com.example.membersapp.model.Message.*;
 
+import com.example.membersapp.metric.Metrics;
 import com.example.membersapp.model.Message;
-import com.example.membersapp.model.Metric;
 import com.example.membersapp.model.TransactionResponse;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
 public class TransactionOutputNode extends TreeNode {
   private static final Logger LOG = LoggerFactory.getLogger(TransactionOutputNode.class);
 
-  public TransactionOutputNode(String name) {
-    super(name);
+  public TransactionOutputNode(String name, Metrics metrics) {
+    super(name, metrics);
   }
 
-  protected void executeBody(Message message, CompletableFuture<Void> future, Metric metric) {
+  protected void executeBody(Message message, CompletableFuture<Void> future) {
     var transactionResponse = getResponse(message);
     message.setResponse(transactionResponse);
-    metric.endWithSuccess();
+    metrics.addSuccess(this.name);
     future.complete(null);
   }
 

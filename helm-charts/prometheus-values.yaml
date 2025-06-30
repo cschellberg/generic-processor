@@ -1,0 +1,77 @@
+# my-prometheus-server-only-values.yaml
+
+# Disable Alertmanager subchart (this one was already correct)
+alertmanager:
+  enabled: false
+
+# Disable Kube-State-Metrics subchart (use the exact key name)
+kube-state-metrics: # <--- CHANGED FROM 'kubeStateMetrics' to 'kube-state-metrics'
+  enabled: false
+
+# Disable Node Exporter subchart (use the exact key name)
+prometheus-node-exporter: # <--- CHANGED FROM 'nodeExporter' to 'prometheus-node-exporter'
+  enabled: false
+
+# Disable Pushgateway subchart (use the exact key name)
+prometheus-pushgateway: # <--- CHANGED FROM 'pushgateway' to 'prometheus-pushgateway'
+  enabled: false
+
+# Prometheus Server Configuration (minimal, you can add more if needed)
+server:
+  # Enable persistence for Prometheus data (highly recommended)
+  persistentVolume:
+    enabled: true
+    storageClass: "hostpath" # Use your cluster's default or preferred StorageClass
+    size: 10Gi # Adjust size based on your expected data volume and retention
+
+  # Data retention (default is typically 15d, good to explicitly set)
+  retention: "15d"
+
+  # Resources for the Prometheus server pod (adjust based on your cluster and load)
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m # 1 CPU core
+      memory: 2Gi
+
+  # Service configuration for the Prometheus UI
+  service:
+    type: ClusterIP
+    servicePort: 9090
+    ports:
+      - name: http
+        protocol: TCP
+        port: 9090
+        targetPort: 9090
+
+  # Example scrape configurations for your Java Spring application
+extraScrapeConfigs: |
+  - job_name: 'generic-processor-local'
+    static_configs:
+    - targets:
+      - "192.168.0.4:8080"
+    metrics_path: "/actuator/prometheus"
+  - job_name: 'spring-application'
+    kubernetes_sd_configs:
+    - role: endpoints
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      action: keep
+      regex: true
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+      action: replace
+      target_label: __metrics_path__
+      regex: (.+)
+    - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+      action: replace
+      target_label: __address__
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+    - source_labels: [__meta_kubernetes_service_name]
+      action: replace
+      target_label: kubernetes_service_name
+    - source_labels: [__meta_kubernetes_namespace]
+      action: replace
+      target_label: kubernetes_namespace

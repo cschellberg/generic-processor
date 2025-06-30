@@ -51,6 +51,7 @@ Metrics and Graphs are done with open source libraries
 - Postman (for building the mountebank imposters)
 - git
 - Intellij (or equivalent IDE)
+- kubectl
 
 # Installation 
 
@@ -91,6 +92,16 @@ In your Docker Desktop you should see the following
     ![](images/transaction.jpg)
 16. The App should respond with something like this.
     ![](images/transaction_response.jpg)
+
+# Installing Prometheus
+1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+2. helm repo update
+3. change the values in the file in the helm-charts directory, my-prometheus-values.yaml if necessary
+4. kubectl create namespace monitoring
+5. cd to the helm-charts directory
+6. helm install prometheus prometheus-community/prometheus   --namespace monitoring   -f my-prometheus-values.yaml
+
+
 
 # Configuration 
   To configure a transaction engine to service a given client create a yaml file in the resources/routes directory

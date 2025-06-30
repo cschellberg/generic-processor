@@ -17,11 +17,6 @@ public class BackendConnector {
   }
 
   public Mono<BackendResponse> getResponse() {
-    try {
-      Thread.sleep(300);
-    } catch (InterruptedException e) {
-      LOG.info("Sleep interrupted");
-    }
     return webClient
         .get()
         .uri("/backend/request")

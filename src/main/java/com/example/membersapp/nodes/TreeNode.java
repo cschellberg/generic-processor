@@ -1,8 +1,10 @@
 package com.example.membersapp.nodes;
 
+import static com.example.membersapp.engine.TransactionEngine.ROOT;
+
 import com.example.membersapp.backend.BackendConnector;
+import com.example.membersapp.metric.Metrics;
 import com.example.membersapp.model.Message;
-import com.example.membersapp.model.Metric;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -16,45 +18,55 @@ public class TreeNode implements TreeNodeInterface {
   private static final Logger LOG = LoggerFactory.getLogger(TreeNode.class);
   protected String name;
   protected String nextNode;
+  protected Metrics metrics;
   private final List<TreeNodeInterface> children = new ArrayList<>();
   protected BackendConnector backendConnector;
   private List<String> dependsOn = new ArrayList<>();
 
-  public TreeNode(String name) {
+  public TreeNode(String name, Metrics metrics) {
     this.name = name;
+    this.metrics = metrics;
   }
 
-  public TreeNode(BackendConnector backendConnector) {
+  public TreeNode(BackendConnector backendConnector, Metrics metrics) {
     this.backendConnector = backendConnector;
+    this.metrics = metrics;
   }
 
   @Override
-  public CompletableFuture<Void> execute(Message message, List<Metric> metricList) {
+  public CompletableFuture<Void> execute(Message message) {
     CompletableFuture<Void> future = new CompletableFuture<>();
     setNextNode(message);
-    var metric = new Metric(name);
-    metricList.add(metric);
-    executeBody(message, future, metric);
+    if (!this.name.equals(ROOT)) {
+      metrics
+          .getTimer(this.name)
+          .record(
+              () -> {
+                executeBody(message, future);
+              });
+    } else {
+      future.complete(null);
+    }
     return future;
   }
 
-  protected void executeBody(Message message, CompletableFuture<Void> future, Metric metric) {
+  protected void executeBody(Message message, CompletableFuture<Void> future) {
     if (backendConnector != null) {
       backendConnector
           .getResponse()
           .subscribe(
               response -> {
                 LOG.info("Node {} is executing with workingMap {}", name, message);
-                metric.endWithSuccess();
+                metrics.addSuccess(this.name);
                 future.complete(null);
               },
               error -> {
                 LOG.error("Node {} failed execution because {}", name, error.toString());
-                metric.endWithFailure();
+                metrics.addFalures(this.name);
                 future.completeExceptionally(error);
               });
     } else {
-      metric.endWithSuccess();
+      metrics.addSuccess(this.name);
       future.complete(null);
     }
   }
