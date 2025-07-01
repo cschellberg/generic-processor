@@ -99,9 +99,13 @@ In your Docker Desktop you should see the following
 3. change the values in the file in the helm-charts directory, my-prometheus-values.yaml if necessary
 4. kubectl create namespace monitoring
 5. cd to the helm-charts directory
-6. helm install prometheus prometheus-community/prometheus   --namespace monitoring   -f my-prometheus-values.yaml
+6. helm install prometheus prometheus-community/prometheus   --namespace monitoring   -f prometheus-values.yaml
 
+# Installing Grafana
 
+1. helm repo add grafana https://grafana.github.io/helm-charts
+2. helm repo update
+3. helm install grafana grafana/grafana --namespace default --set service.type=NodePort --set adminPassword='a password!'
 
 # Configuration 
   To configure a transaction engine to service a given client create a yaml file in the resources/routes directory
