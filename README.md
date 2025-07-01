@@ -96,7 +96,7 @@ In your Docker Desktop you should see the following
 # Installing Prometheus
 1. helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 2. helm repo update
-3. change the values in the file in the helm-charts directory, my-prometheus-values.yaml if necessary
+3. change the values in the file in the helm-charts/prometheus directory, my-prometheus-values.yaml if necessary
 4. kubectl create namespace monitoring
 5. cd to the helm-charts directory
 6. helm install prometheus prometheus-community/prometheus   --namespace monitoring   -f prometheus-values.yaml

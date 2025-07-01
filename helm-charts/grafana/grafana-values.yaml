@@ -1,0 +1,9 @@
+persistence:
+  enabled: true
+  storageClassName: hostpath
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi # Adjust size as needed
+
+initChownData:
+  enabled: false
