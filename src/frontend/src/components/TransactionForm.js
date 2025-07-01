@@ -37,7 +37,9 @@ function TransactionForm() {
             setShowForm(false);
         } catch (error) {
             console.error('Error posting transaction:', error);
-            // Handle error
+            console.error("response is "+response);
+            setApiResponse(response.data);
+            setShowForm(false);
         }
     };
 

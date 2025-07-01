@@ -1,5 +1,6 @@
 package com.example.membersapp.engine;
 
+import com.example.membersapp.engine.exception.TransactionActionEngineException;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Transaction;
 import com.example.membersapp.nodes.RootNode;
@@ -67,12 +68,15 @@ public class TransactionEngine {
     return null;
   }
 
-  public Message execute(Transaction transaction)
-      throws ExecutionException, InterruptedException, TimeoutException {
+  public Message execute(Transaction transaction) throws TransactionActionEngineException {
     transaction.setTransactionDate(new Date());
     transaction.setTransactionId(getTransactionId());
     var message = new Message(transaction);
-    return execute(message);
+    try {
+      return execute(message);
+    } catch (Exception ex) {
+      throw new TransactionActionEngineException(message);
+    }
   }
 
   public Message execute(Message message)

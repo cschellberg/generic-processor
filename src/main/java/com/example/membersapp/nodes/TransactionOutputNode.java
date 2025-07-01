@@ -24,7 +24,7 @@ public class TransactionOutputNode extends TreeNode {
     future.complete(null);
   }
 
-  private Object getResponse(Message message) {
+  public static Object getResponse(Message message) {
     var transactionResponse = new TransactionResponse();
     var scratchPadMap = message.getScratchPadMap();
     transactionResponse.setTransactionId((String) scratchPadMap.get(TRANSACTION_ID));

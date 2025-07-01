@@ -1,6 +1,7 @@
 package com.example.membersapp.controller;
 
 import com.example.membersapp.engine.TransactionEngineManager;
+import com.example.membersapp.engine.exception.TransactionActionEngineException;
 import com.example.membersapp.model.Message;
 import com.example.membersapp.model.Transaction;
 import com.example.membersapp.model.TransactionResponse;
@@ -26,14 +27,15 @@ public class TransactionController {
     var transactionEngine = transactionEngineManager.getTransactionEngine(transaction.getRoute());
     Message message = null;
     LOG.info("transactionEngine: {} ", transactionEngine);
-    TransactionResponse transactionResponse = new TransactionResponse();
+    TransactionResponse transactionResponse = null;
     try {
       message = transactionEngine.execute(transaction);
       transactionResponse = (TransactionResponse) message.getResponse();
-    } catch (Exception e) {
+    } catch (TransactionActionEngineException ex) {
+      transactionResponse = (TransactionResponse) ex.getResponse();
       transactionResponse.setResponseCode("909");
       transactionResponse.setResponseMessage("Declined because of server error");
-      return new ResponseEntity<>(transactionResponse, HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(transactionResponse, HttpStatus.OK);
     }
     LOG.info("Transaction created {}", message);
     return new ResponseEntity<>(transactionResponse, HttpStatus.CREATED);
