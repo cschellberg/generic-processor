@@ -118,6 +118,9 @@ In your Docker Desktop you should see the following
 1. Make sure you have port forwarding of the generic-process 4000:8080
 2. In the browser go to: http://localhost:4000/ and then select transaction
 3. Then enter the transaction and submit
+4. Go grafana, http:/localhost:4010 and login
+5. Import the dashboard grafana/GenericProcessorLatencies.json
+6. In a few minutes you should be able to see your transactions
 
 # Configuration 
   To configure a transaction engine to service a given client create a yaml file in the resources/routes directory
