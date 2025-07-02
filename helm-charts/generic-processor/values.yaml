@@ -1,0 +1,73 @@
+replicaCount: 1
+
+image:
+  repository: generic-processor # Replace with your image repository
+  pullPolicy: IfNotPresent # For local desktop K8s, IfNotPresent or Never is common. Use Always for remote registries.
+  tag: "0.0.1" # Match this to the tag you built
+
+service:
+  type: ClusterIP # Changed this from NodePort to ClusterIP
+  port: 8080
+  targetPort: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: generic-processor.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Additional environment variables for the Spring Boot application
+env: []
+  # - name: SPRING_PROFILES_ACTIVE
+  #   value: production
+  # - name: DB_URL
+#   value: jdbc:postgresql://your-db-host:5432/your-db-name
+
+# If you have specific Spring Boot configuration that you want to externalize via ConfigMap
+config:
+  enabled: false
+  data: {}
+    # application.yaml: |
+    #   server:
+    #     port: 8080
+    #   spring:
+    #     datasource:
+  #       url: jdbc:h2:mem:testdb
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true # <--- THIS IS THE MISSING PIECE
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "" # If left empty and create: true, Helm will generate a name for you.
+  # Or, you can set a specific name like 'generic-processor-sa'

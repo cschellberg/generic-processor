@@ -51,7 +51,7 @@ extraScrapeConfigs: |
   - job_name: 'generic-processor-local'
     static_configs:
     - targets:
-      - "192.168.0.7:8080"
+      - "generic-processor:8080"
     metrics_path: "/actuator/prometheus"
   - job_name: 'spring-application'
     kubernetes_sd_configs:

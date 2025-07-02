@@ -4,4 +4,4 @@ pluginManagement {
         mavenCentral() // Often good to have for other things, but not strictly for plugins block
     }
 }
-rootProject.name = 'JavaTest'
+rootProject.name = 'generic-processor'

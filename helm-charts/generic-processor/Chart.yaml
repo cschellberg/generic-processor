@@ -1,0 +1,6 @@
+apiVersion: v2
+name: generic-processor
+description: A Helm chart for deploying generic-processor
+type: application
+version: 0.1.0 # Chart version
+appVersion: "0.0.1" # Your Spring Boot application version
