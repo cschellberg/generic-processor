@@ -114,6 +114,10 @@ In your Docker Desktop you should see the following
 3. cd to helm-charts/generic-processor
 4. helm install generic-processor .
 
+# Testing the Kubernetes version of generic processor
+1. Make sure you have port forwarding of the generic-process 4000:8080
+2. In the browser go to: http://localhost:4000/ and then select transaction
+3. Then enter the transaction and submit
 
 # Configuration 
   To configure a transaction engine to service a given client create a yaml file in the resources/routes directory
