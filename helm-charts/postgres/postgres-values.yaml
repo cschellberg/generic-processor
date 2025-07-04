@@ -1,0 +1,8 @@
+postgresql:
+  auth:
+    username: admin
+    password: Jim1951!
+    database: company
+  persistence:
+    enabled: true
+    size: 5

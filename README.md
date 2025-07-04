@@ -114,6 +114,14 @@ In your Docker Desktop you should see the following
 3. cd to helm-charts/generic-processor
 4. helm install generic-processor .
 
+# Installing Postgres
+1. helm repo add bitnami https://charts.bitnami.com/bitnami
+2. helm repo update
+3. helm install postgres bitnami/postgresql -f postgres-values.yaml
+4. kubectl port-forward --namespace default svc/postgres-postgresql 5432:5432 &
+5. You must set the spring active profile env var to kubernetes so it picks
+   up the correct application.properties file
+
 # Testing the Kubernetes version of generic processor
 1. Make sure you have port forwarding of the generic-process 4000:8080
 2. In the browser go to: http://localhost:4000/ and then select transaction
@@ -121,6 +129,7 @@ In your Docker Desktop you should see the following
 4. Go grafana, http:/localhost:4010 and login
 5. Import the dashboard grafana/GenericProcessorLatencies.json
 6. In a few minutes you should be able to see your transactions
+
 
 # Configuration 
   To configure a transaction engine to service a given client create a yaml file in the resources/routes directory
