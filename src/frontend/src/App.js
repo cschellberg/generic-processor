@@ -18,9 +18,7 @@ function App() {
             <div className="App">
                 <nav className="navbar">
                     <Link to="/companies" className="nav-link">Companies</Link>
-                    <Link to="/companies/create" className="nav-link">Add New Company</Link>
                     <Link to="/events" className="nav-link">Events</Link>
-                    <Link to="/events/new" className="nav-link">Add New Event</Link>
                     <Link to="/transaction" className="nav-link">Transaction</Link>
                 </nav>
 
@@ -33,6 +31,7 @@ function App() {
                         {/* Redirect to members list on root path */}
                         <Route path="/" element={<CompanyList />} />
                         <Route path="/companies" element={<CompanyList />} />
+                        <Route path="/events" element={<EventList />} />
                         <Route path="/companies/create" element={<CompanyCreate />} />
                         <Route path="/companies/edit/:id" element={<CompanyEdit />} />
                         <Route path="/companies/:companyId/events" element={<EventList />} />

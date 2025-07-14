@@ -1,5 +1,6 @@
 package com.example.membersapp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Company {
   @Column(name = "notes", columnDefinition = "TEXT") // Use TEXT for potentially long notes
   private String notes;
 
+  @JsonManagedReference
   @OneToMany(
       mappedBy = "company",
       cascade = CascadeType.ALL,

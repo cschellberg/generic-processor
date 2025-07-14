@@ -50,7 +50,7 @@ const CompanyCreate = () => {
     };
 
     return (
-        <div>
+        <div className="member-form">
             <h2>Create New Company</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -103,10 +103,10 @@ const CompanyCreate = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" disabled={submitting} className="save-button">
                     {submitting ? 'Creating...' : 'Create Company'}
                 </button>
-                <button type="button" onClick={() => navigate('/companies')} style={{ marginLeft: '10px' }}>
+                <button type="button" onClick={() => navigate('/companies')} className="cancel-button">
                     Cancel
                 </button>
                 {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}

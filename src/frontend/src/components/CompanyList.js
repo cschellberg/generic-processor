@@ -49,11 +49,9 @@ const CompanyList = () => {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div>
+        <div className="member-list">
             <h2>Companies</h2>
-            <Link to="/companies/create">
-                <button>Create New Company</button>
-            </Link>
+
             {companies.length === 0 ? (
                 <p>No companies found.</p>
             ) : (
@@ -78,10 +76,10 @@ const CompanyList = () => {
                                 <Link to={`/companies/${company.id}/events`}>
                                     <button>View Events</button>
                                 </Link>
-                                <Link to={`/companies/edit/${company.id}`} style={{ marginLeft: '10px' }}>
-                                    <button>Edit</button>
+                                <Link to={`/companies/edit/${company.id}`} className="edit-button">
+                                    <button className="edit-button">Edit</button>
                                 </Link>
-                                <button onClick={() => handleDelete(company.id)} style={{ marginLeft: '10px' }}>
+                                <button onClick={() => handleDelete(company.id)} className="delete-button">
                                     Delete
                                 </button>
                             </td>
@@ -90,6 +88,9 @@ const CompanyList = () => {
                     </tbody>
                 </table>
             )}
+            <Link to="/companies/create" className="add-new-button">
+                Create New Company
+            </Link>
         </div>
     );
 };

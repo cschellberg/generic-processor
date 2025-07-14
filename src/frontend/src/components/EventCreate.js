@@ -51,7 +51,7 @@ const EventCreate = () => {
     if (!companyId) return <div>Company ID is required to create an event.</div>;
 
     return (
-        <div>
+        <div className="member-form">
             <h2>Create New Event for Company ID: {companyId}</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -85,10 +85,10 @@ const EventCreate = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" disabled={submitting} className="save-button">
                     {submitting ? 'Creating...' : 'Create Event'}
                 </button>
-                <button type="button" onClick={() => navigate(`/companies/${companyId}/events`)} style={{ marginLeft: '10px' }}>
+                <button type="button" onClick={() => navigate(`/companies/${companyId}/events`)} className="cancel-button">
                     Cancel
                 </button>
                 {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}

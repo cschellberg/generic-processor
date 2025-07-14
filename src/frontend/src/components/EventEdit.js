@@ -88,7 +88,7 @@ const EventEdit = () => {
 
 
     return (
-        <div>
+        <div className="member-form">
             <h2>Edit Event (ID: {id})</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -122,7 +122,7 @@ const EventEdit = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" disabled={submitting} className="save-button">
                     {submitting ? 'Updating...' : 'Update Event'}
                 </button>
                 <button type="button" onClick={() => {
@@ -131,7 +131,7 @@ const EventEdit = () => {
                     } else {
                         navigate('/'); // Fallback
                     }
-                }} style={{ marginLeft: '10px' }}>
+                }} className="cancel-button">
                     Cancel
                 </button>
                 {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}

@@ -11,7 +11,11 @@ const EventList = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/companies/${companyId}/events`);
+                let fetchUrl=`${API_BASE_URL}/events`
+                if ( companyId){
+                    fetchUrl=`${API_BASE_URL}/companies/${companyId}/events`
+                }
+                const response = await fetch(fetchUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -23,10 +27,7 @@ const EventList = () => {
                 setLoading(false);
             }
         };
-
-        if (companyId) { // Only fetch if companyId is available
-            fetchEvents();
-        }
+        fetchEvents();
     }, [companyId]);
 
     const handleDelete = async (eventId) => {
@@ -49,20 +50,18 @@ const EventList = () => {
 
     if (loading) return <div>Loading events...</div>;
     if (error) return <div>Error: {error.message}</div>;
-    if (!companyId) return <div>Please provide a Company ID to view events.</div>;
 
     return (
-        <div>
+        <div className="member-list">
             <h2>Events for Company ID: {companyId}</h2>
-            <Link to={`/companies/${companyId}/events/create`}>
-                <button>Create New Event</button>
-            </Link>
+
             {events.length === 0 ? (
                 <p>No events found for this company.</p>
             ) : (
                 <table>
                     <thead>
                     <tr>
+                        <th>Company</th>
                         <th>Date</th>
                         <th>Type</th>
                         <th>Action</th>
@@ -72,14 +71,15 @@ const EventList = () => {
                     <tbody>
                     {events.map((event) => (
                         <tr key={event.id}>
+                            <td>{event.company.companyName}</td>
                             <td>{event.date}</td>
                             <td>{event.type}</td>
                             <td>{event.action}</td>
                             <td>
-                                <Link to={`/events/edit/${event.id}`}>
-                                    <button>Edit</button>
+                                <Link to={`/events/edit/${event.id}`} className="edit-button">
+                                    <button className="edit-button">Edit</button>
                                 </Link>
-                                <button onClick={() => handleDelete(event.id)} style={{ marginLeft: '10px' }}>
+                                <button onClick={() => handleDelete(event.id)} className="delete-button">
                                     Delete
                                 </button>
                             </td>
@@ -88,6 +88,9 @@ const EventList = () => {
                     </tbody>
                 </table>
             )}
+            <Link to={`/companies/${companyId}/events/create`} className="add-new-button">
+                Create New Event
+            </Link>
         </div>
     );
 };

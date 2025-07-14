@@ -10,8 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(
-    "/api/events") // Or /api/events, but /api/companies/{companyId}/events might be better
+@RequestMapping("/api") // Or /api/events, but /api/companies/{companyId}/events might be better
 public class EventController {
 
   @Autowired private EventRepository eventRepository;
@@ -25,6 +24,12 @@ public class EventController {
       return ResponseEntity.notFound().build();
     }
     List<Event> events = eventRepository.findByCompanyId(companyId);
+    return ResponseEntity.ok(events);
+  }
+
+  @GetMapping("/events")
+  public ResponseEntity<List<Event>> getEvents() {
+    List<Event> events = eventRepository.findAll();
     return ResponseEntity.ok(events);
   }
 

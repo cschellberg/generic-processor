@@ -67,7 +67,7 @@ function MemberList() {
                 ))}
                 </tbody>
             </table>
-            <Link to="/members/new" className="add-new-button">Add New Member</Link>
+            <Link to="/members/new" className="add-new-button" >Add New Member</Link>
         </div>
     );
 }

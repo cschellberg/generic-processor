@@ -77,7 +77,7 @@ const CompanyEdit = () => {
     if (!formData.companyName && !loading) return <div>Company not found.</div>;
 
     return (
-        <div>
+        <div className="member-form">
             <h2>Edit Company (ID: {id})</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -130,10 +130,10 @@ const CompanyEdit = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <button type="submit" disabled={submitting}>
+                <button type="submit" disabled={submitting} className="save-button">
                     {submitting ? 'Updating...' : 'Update Company'}
                 </button>
-                <button type="button" onClick={() => navigate('/companies')} style={{ marginLeft: '10px' }}>
+                <button type="button" onClick={() => navigate('/companies')} className="cancel-button">
                     Cancel
                 </button>
                 {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}

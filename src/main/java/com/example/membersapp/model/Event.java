@@ -1,11 +1,13 @@
 package com.example.membersapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate; // For date without time
 // For date and time
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "events")
@@ -27,6 +29,8 @@ public class Event {
   @Column(name = "action_taken", columnDefinition = "TEXT")
   private String action;
 
+  @ToString.Exclude
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY) // Many events to one company
   @JoinColumn(
       name = "company_id",
