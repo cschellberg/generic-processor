@@ -61,7 +61,24 @@ body {
     background-color: #f2f2f2;
 }
 
-.edit-button, .delete-button, .save-button, .cancel-button, .add-new-button {
+.notes-text-area {
+    /* Basic styling for all text areas */
+    width: 100%; /* Make the text area fill its parent container */
+    padding: 10px; /* Add some space inside the text area */
+    border: 1px solid #ccc; /* A light grey border */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-family: Arial, sans-serif; /* Choose a common, readable font */
+    font-size: 16px; /* Standard font size */
+    line-height: 1.5; /* Spacing between lines of text */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    resize: vertical; /* Allow vertical resizing, but not horizontal */
+
+    /* Focus state for when the text area is active */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus effects */
+}
+
+
+.edit-button, .delete-button, .save-button, .cancel-button, .add-new-button, .events-button {
     padding: 8px 12px;
     margin: 5px;
     border: none;
@@ -72,6 +89,7 @@ body {
 
 .edit-button { background-color: #007bff; }
 .edit-button:hover { background-color: #0056b3; }
+.events-button { background-color: #28a745}
 
 .delete-button { background-color: #dc3545; }
 .delete-button:hover { background-color: #c82333; }

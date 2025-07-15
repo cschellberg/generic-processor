@@ -1,4 +1,4 @@
-package com.example.membersapp.model;
+package com.example.membersapp.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

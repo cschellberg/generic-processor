@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom'; // Assuming you use React Router for navigation
+import React, {useState, useEffect} from 'react';
+import {Link, useParams} from 'react-router-dom'; // Assuming you use React Router for navigation
 const API_BASE_URL = '/api';
 
 const EventList = () => {
-    const { companyId } = useParams(); // Get companyId from URL params, e.g., /companies/:companyId/events
+    const {companyId} = useParams(); // Get companyId from URL params, e.g., /companies/:companyId/events
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -11,9 +11,9 @@ const EventList = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                let fetchUrl=`${API_BASE_URL}/events`
-                if ( companyId){
-                    fetchUrl=`${API_BASE_URL}/companies/${companyId}/events`
+                let fetchUrl = `${API_BASE_URL}/events`
+                if (companyId) {
+                    fetchUrl = `${API_BASE_URL}/companies/${companyId}/events`
                 }
                 const response = await fetch(fetchUrl);
                 if (!response.ok) {
@@ -53,8 +53,12 @@ const EventList = () => {
 
     return (
         <div className="member-list">
-            <h2>Events for Company ID: {companyId}</h2>
-
+            {companyId != null ? (
+                <h2>Events for Company ID: {companyId}</h2>
+            ) : (
+                <h2>All Events</h2>
+            )
+            }
             {events.length === 0 ? (
                 <p>No events found for this company.</p>
             ) : (
@@ -76,7 +80,7 @@ const EventList = () => {
                             <td>{event.type}</td>
                             <td>{event.action}</td>
                             <td>
-                                <Link to={`/events/edit/${event.id}`} className="edit-button">
+                                <Link to={`/events/edit/${event.id}`}>
                                     <button className="edit-button">Edit</button>
                                 </Link>
                                 <button onClick={() => handleDelete(event.id)} className="delete-button">

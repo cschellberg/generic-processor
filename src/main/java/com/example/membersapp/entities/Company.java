@@ -1,10 +1,10 @@
-package com.example.membersapp.model;
+package com.example.membersapp.entities;
 
+import com.example.membersapp.model.dtos.CompanyDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "companies") // It's good practice to pluralize table names
 @Data // Lombok annotation for getters, setters, toString, equals, hashCode
 @NoArgsConstructor // Lombok annotation for no-arg constructor
-@AllArgsConstructor // Lombok annotation for all-arg constructor
 public class Company {
 
   @Id
@@ -57,5 +56,15 @@ public class Company {
   public void removeEvent(Event event) {
     events.remove(event);
     event.setCompany(null);
+  }
+
+  public Company(CompanyDTO companyDTO) {
+    this.companyName = companyDTO.getCompanyName();
+    this.city = companyDTO.getCity();
+    this.state = companyDTO.getState();
+    this.pointOfContact = companyDTO.getPointOfContact();
+    this.notes = companyDTO.getNotes();
+    this.id = companyDTO.getId();
+    companyDTO.getEvents().forEach(eventDTO -> events.add(new Event(eventDTO)));
   }
 }

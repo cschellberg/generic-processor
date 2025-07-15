@@ -1,6 +1,8 @@
 package com.example.membersapp.controller;
 
-import com.example.membersapp.model.Event;
+import com.example.membersapp.model.dtos.CompanyMapper;
+import com.example.membersapp.model.dtos.EventDTO;
+import com.example.membersapp.model.dtos.EventMapper;
 import com.example.membersapp.repository.CompanyRepository;
 import com.example.membersapp.repository.EventRepository;
 import java.util.List;
@@ -17,40 +19,46 @@ public class EventController {
 
   @Autowired private CompanyRepository companyRepository;
 
+  @Autowired private EventMapper eventMapper;
+
+  @Autowired private CompanyMapper companyMapper;
+
   // Get all events for a specific company
   @GetMapping("/companies/{companyId}/events")
-  public ResponseEntity<List<Event>> getEventsByCompanyId(@PathVariable Long companyId) {
+  public ResponseEntity<List<EventDTO>> getEventsByCompanyId(@PathVariable Long companyId) {
     if (!companyRepository.existsById(companyId)) {
       return ResponseEntity.notFound().build();
     }
-    List<Event> events = eventRepository.findByCompanyId(companyId);
+    List<EventDTO> events = eventMapper.toDtoList(eventRepository.findByCompanyId(companyId));
     return ResponseEntity.ok(events);
   }
 
   @GetMapping("/events")
-  public ResponseEntity<List<Event>> getEvents() {
-    List<Event> events = eventRepository.findAll();
+  public ResponseEntity<List<EventDTO>> getEvents() {
+    List<EventDTO> events = eventMapper.toDtoList(eventRepository.findAll());
     return ResponseEntity.ok(events);
   }
 
   // Get a specific event
   @GetMapping("/events/{id}")
-  public ResponseEntity<Event> getEventById(@PathVariable Long id) {
-    return eventRepository
-        .findById(id)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
+    var optionalEvent = eventRepository.findById(id);
+    return optionalEvent
+        .map(event -> ResponseEntity.ok(eventMapper.toDto(event)))
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   // Create an event for a specific company
   @PostMapping("/companies/{companyId}/events")
-  public ResponseEntity<Event> createEvent(@PathVariable Long companyId, @RequestBody Event event) {
+  public ResponseEntity<EventDTO> createEvent(
+      @PathVariable Long companyId, @RequestBody EventDTO event) {
     return companyRepository
         .findById(companyId)
         .map(
             company -> {
-              event.setCompany(company);
-              Event createdEvent = eventRepository.save(event);
+              event.setCompany(companyMapper.toDto(company));
+              EventDTO createdEvent =
+                  eventMapper.toDto(eventRepository.save(eventMapper.toEntity(event)));
               return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
             })
         .orElse(ResponseEntity.notFound().build());
@@ -58,21 +66,19 @@ public class EventController {
 
   // Update an event
   @PutMapping("/events/{id}")
-  public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event eventDetails) {
-    return eventRepository
-        .findById(id)
-        .map(
-            event -> {
-              event.setDate(eventDetails.getDate());
-              event.setType(eventDetails.getType());
-              event.setAction(eventDetails.getAction());
-              // You might allow changing the associated company, but for simplicity, we'll assume
-              // it's fixed.
-              // If you need to change the company, you'd need to fetch the new company and set it.
-              Event updatedEvent = eventRepository.save(event);
-              return ResponseEntity.ok(updatedEvent);
-            })
-        .orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<EventDTO> updateEvent(
+      @PathVariable Long id, @RequestBody EventDTO eventDetails) {
+    var optionalEvent = eventRepository.findById(id);
+    if (optionalEvent.isPresent()) {
+      var event = optionalEvent.get();
+      event.setDate(eventDetails.getDate());
+      event.setType(eventDetails.getType());
+      event.setAction(eventDetails.getAction());
+      EventDTO updatedEvent = eventMapper.toDto(eventRepository.save(event));
+      return ResponseEntity.ok(updatedEvent);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   // Delete an event

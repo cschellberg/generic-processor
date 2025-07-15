@@ -41,11 +41,13 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     compileOnly 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
     // For testing, if you use Lombok in your test code
     testCompileOnly 'org.projectlombok:lombok:1.18.38'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
     // jakarta.persistence-api is automatically brought by spring-boot-starter-data-jpa
 }
+
 
 // --- Shadow Jar Plugin Configuration ---
 // This configures the 'shadowJar' task

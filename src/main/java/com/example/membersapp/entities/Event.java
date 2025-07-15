@@ -1,10 +1,10 @@
-package com.example.membersapp.model;
+package com.example.membersapp.entities;
 
+import com.example.membersapp.model.dtos.EventDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate; // For date without time
 // For date and time
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,7 +13,6 @@ import lombok.ToString;
 @Table(name = "events")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Event {
 
   @Id
@@ -36,4 +35,12 @@ public class Event {
       name = "company_id",
       nullable = false) // This is the foreign key column in the 'events' table
   private Company company;
+
+  public Event(EventDTO eventDTO) {
+    this.id = eventDTO.getId();
+    this.date = eventDTO.getDate();
+    this.type = eventDTO.getType();
+    this.action = eventDTO.getAction();
+    this.company = new Company(eventDTO.getCompany());
+  }
 }

@@ -74,9 +74,9 @@ const CompanyList = () => {
                             <td>{company.pointOfContact}</td>
                             <td>
                                 <Link to={`/companies/${company.id}/events`}>
-                                    <button>View Events</button>
+                                    <button className="events-button">View Events</button>
                                 </Link>
-                                <Link to={`/companies/edit/${company.id}`} className="edit-button">
+                                <Link to={`/companies/edit/${company.id}`} >
                                     <button className="edit-button">Edit</button>
                                 </Link>
                                 <button onClick={() => handleDelete(company.id)} className="delete-button">

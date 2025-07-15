@@ -1,6 +1,8 @@
 package com.example.membersapp.controller;
 
-import com.example.membersapp.model.Company;
+import com.example.membersapp.entities.Company;
+import com.example.membersapp.model.dtos.CompanyDTO;
+import com.example.membersapp.model.dtos.CompanyMapper;
 import com.example.membersapp.repository.CompanyRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,41 +14,42 @@ import org.springframework.web.bind.annotation.*;
 public class CompanyController {
 
   @Autowired private CompanyRepository companyRepository;
+  @Autowired private CompanyMapper companyMapper;
 
   @GetMapping
-  public List<Company> getAllCompanies() {
-    return companyRepository.findAll();
+  public List<CompanyDTO> getAllCompanies() {
+    return companyMapper.toDtoList(companyRepository.findAll());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
-    return companyRepository
-        .findById(id)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable Long id) {
+    var optionalCompany = companyRepository.findById(id);
+    return optionalCompany
+        .map(company -> ResponseEntity.ok(companyMapper.toDto(company)))
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PostMapping
-  public Company createCompany(@RequestBody Company company) {
-    return companyRepository.save(company);
+  public CompanyDTO createCompany(@RequestBody CompanyDTO companyDTO) {
+    return companyMapper.toDto(companyRepository.save(companyMapper.toEntity(companyDTO)));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Company> updateCompany(
-      @PathVariable Long id, @RequestBody Company companyDetails) {
-    return companyRepository
-        .findById(id)
-        .map(
-            company -> {
-              company.setCompanyName(companyDetails.getCompanyName());
-              company.setCity(companyDetails.getCity());
-              company.setState(companyDetails.getState());
-              company.setPointOfContact(companyDetails.getPointOfContact());
-              company.setNotes(companyDetails.getNotes());
-              Company updatedCompany = companyRepository.save(company);
-              return ResponseEntity.ok(updatedCompany);
-            })
-        .orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<CompanyDTO> updateCompany(
+      @PathVariable Long id, @RequestBody CompanyDTO companyDetails) {
+    var optionalCompany = companyRepository.findById(id);
+    if (optionalCompany.isPresent()) {
+      var company = optionalCompany.get();
+      company.setCompanyName(companyDetails.getCompanyName());
+      company.setCity(companyDetails.getCity());
+      company.setState(companyDetails.getState());
+      company.setPointOfContact(companyDetails.getPointOfContact());
+      company.setNotes(companyDetails.getNotes());
+      Company updatedCompany = companyRepository.save(company);
+      return ResponseEntity.ok(companyMapper.toDto(updatedCompany));
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/{id}")

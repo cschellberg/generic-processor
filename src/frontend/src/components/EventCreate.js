@@ -80,6 +80,7 @@ const EventCreate = () => {
                     <label htmlFor="action">Action:</label>
                     <textarea
                         id="action"
+                        className="notes-text-area"
                         name="action"
                         value={formData.action}
                         onChange={handleChange}

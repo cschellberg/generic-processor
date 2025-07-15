@@ -1,6 +1,6 @@
 package com.example.membersapp.controller;
 
-import com.example.membersapp.model.Member;
+import com.example.membersapp.entities.Member;
 import com.example.membersapp.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;

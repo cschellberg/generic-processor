@@ -97,6 +97,7 @@ const CompanyCreate = () => {
                 <div>
                     <label htmlFor="notes">Notes:</label>
                     <textarea
+                        className="notes-text-area"
                         id="notes"
                         name="notes"
                         value={formData.notes}
