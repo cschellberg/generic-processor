@@ -22,7 +22,8 @@ jobs:
       - run: node -v
       - run: npm install
         working-directory: ./src/frontend
-        
+
+      - run: ./gradlew clean
       - name: Build with Gradle
         run: ./gradlew shadowJar
 
