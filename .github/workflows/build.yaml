@@ -20,7 +20,7 @@ jobs:
           node-version: '20.x'
 
       - run: node -v
-      - run: npm install --prefix ./src/frontend
+      - run: npm install --prefix /Users/dsche/IdeaProjects/JavaTest/src/frontend
         
       - name: Build with Gradle
         run: ./gradlew shadowJar
