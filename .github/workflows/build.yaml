@@ -34,3 +34,7 @@ jobs:
 
       - name: Remove K8 application
         run: helm uninstall generic-processor
+
+      - name: Install app
+        run: helm install generic-processor .
+        working-directory: ./helm-charts/generic-processor
