@@ -34,5 +34,5 @@ jobs:
 
 
       - name: Install app
-        run: helm upgrade generic-processor .
+        run: helm install generic-processor .
         working-directory: ./helm-charts/generic-processor
