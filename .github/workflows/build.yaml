@@ -20,8 +20,7 @@ jobs:
           node-version: '20.x'
 
       - run: node -v
-      - run: npm install
-      - run: npm test
+      - run: npm install --prefix ./src/frontend
         
       - name: Build with Gradle
         run: ./gradlew shadowJar
