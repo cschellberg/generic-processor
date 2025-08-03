@@ -20,7 +20,7 @@ jobs:
           node-version: '20.x'
 
       - run: node -v
-      - run: npm install --prefix ../IdeaProjects/JavaTest/src/frontend
+      - run: npm install --prefix generic-processor/generic-processor/src/frontend
         
       - name: Build with Gradle
         run: ./gradlew shadowJar
