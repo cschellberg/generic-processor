@@ -25,3 +25,6 @@ jobs:
         
       - name: Build with Gradle
         run: ./gradlew shadowJar
+
+      - name: Build docker image
+        run: docker build . -t generic-processor:0.0.1
