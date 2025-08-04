@@ -32,6 +32,9 @@ jobs:
       - name: Build docker image
         run: docker build . -t generic-processor:0.0.1
 
+      - name: Remove K8 application
+        run: helm uninstall generic-processor
+        continue-on-error: true
 
       - name: Install app
         run: helm install generic-processor .
